@@ -3,211 +3,148 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FormReady — Make your documents application-ready</title>
-<style>
-:root{--ink:#17213b;--muted:#64708a;--line:#e6e9f2;--purple:#6042e8;--purple2:#7a5cff;--green:#21a65a;--bg:#fbfcff}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#fff}
-button,input,select{font:inherit}.nav{height:76px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100% - 1160px)/2));background:#fff}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:23px}.logo{width:34px;height:40px;border-radius:8px;background:linear-gradient(145deg,#5c39ed,#765cff);position:relative}.logo:after{content:"";position:absolute;left:8px;top:8px;width:16px;height:22px;border:2px solid white;border-radius:3px}.brand span{background:linear-gradient(90deg,#1d2750,#6945f0);-webkit-background-clip:text;color:transparent}.links{display:flex;gap:28px;align-items:center;font-size:14px}.links a{color:#17213b;text-decoration:none}.pill{border:1px solid var(--line);padding:10px 16px;border-radius:12px;background:#fff}.hero{max-width:1160px;margin:0 auto;padding:54px 24px 38px;display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
-h1{font-size:48px;line-height:1.06;margin:0 0 18px;letter-spacing:-2px}.grad{color:var(--purple)}.lead{font-size:18px;line-height:1.55;color:var(--muted);max-width:560px}.trust{display:flex;gap:22px;margin:26px 0;color:#39435d;font-size:13px}.trust b{display:block;color:#17213b;margin-bottom:3px}.upload{border:1.5px dashed #cbd0df;border-radius:14px;padding:26px;text-align:center;background:#fff;cursor:pointer}.upload.drag{background:#f4f1ff;border-color:var(--purple)}.upload .cloud{font-size:39px;color:var(--purple)}.upload strong{display:block;font-size:17px;margin:7px}.choose,.primary{border:0;background:linear-gradient(90deg,var(--purple),var(--purple2));color:white;padding:12px 19px;border-radius:8px;font-weight:700;cursor:pointer}.small{font-size:12px;color:var(--muted);margin-top:10px}.preview{border:1px solid var(--line);border-radius:15px;padding:28px;background:linear-gradient(145deg,#fafaff,#f7f9ff);min-height:250px;display:flex;align-items:center;justify-content:center;gap:35px}.filebox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center;box-shadow:0 8px 24px #1c27500d;min-width:145px}.fileicon{font-size:40px}.arrow{font-size:30px;color:#70799b}.after{color:var(--green);font-weight:800}.searches{margin-top:24px}.searches span{display:inline-block;border:1px solid #dce0eb;border-radius:8px;padding:9px 12px;margin:5px;font-size:12px;background:white;cursor:pointer}.section{border-top:1px solid var(--line);padding:30px 24px}.wrap{max-width:1160px;margin:auto}.center{text-align:center}.center h2{margin:0;font-size:27px}.sub{color:var(--muted);margin:8px 0 25px}.tools{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.tool{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff;cursor:pointer;text-align:left}.tool:hover{box-shadow:0 8px 25px #24306010;transform:translateY(-1px)}.toolicon{font-size:27px}.tool h3{font-size:14px;margin:10px 0 6px}.tool p{font-size:12px;color:var(--muted);line-height:1.45;margin:0}.appmode{margin-top:28px;border:1px solid #dcefe3;background:#f6fff9;border-radius:14px;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:20px}.appmode h3{margin:0 0 5px}.appmode p{margin:0;color:var(--muted);font-size:13px}.controls{display:flex;gap:10px}.controls select{padding:11px;border:1px solid #d6dbe8;border-radius:8px;background:white;min-width:220px}.notice{display:none;margin-top:14px;padding:14px;border-radius:10px;background:#eef7ff;color:#24527b;font-size:13px}.benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.benefit{padding:18px;border:1px solid var(--line);border-radius:12px;background:#fafbff;font-size:13px}.benefit b{display:block;margin-bottom:4px}.modal{position:fixed;inset:0;background:#10162b88;display:none;align-items:center;justify-content:center;padding:20px;z-index:5}.modal.open{display:flex}.card{background:white;border-radius:16px;width:min(540px,100%);padding:25px;box-shadow:0 20px 70px #0003}.row{display:flex;gap:10px;align-items:center}.row input{flex:1;padding:11px;border:1px solid #d6dbe8;border-radius:8px}.result{margin-top:18px;padding:16px;background:#f7f8fc;border-radius:10px;display:none}.close{float:right;border:0;background:transparent;font-size:22px;cursor:pointer}.previewImg{max-width:130px;max-height:110px;display:block;margin:0 auto 10px;border-radius:6px}
-footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:var(--muted);font-size:12px}
-@media(max-width:850px){.links{display:none}.hero{grid-template-columns:1fr;padding-top:35px}h1{font-size:39px}.tools{grid-template-columns:1fr 1fr}.benefits{grid-template-columns:1fr 1fr}.appmode{flex-direction:column;align-items:flex-start}.controls{width:100%}.controls select{flex:1}.trust{flex-wrap:wrap}.preview{display:none}}
-@media(max-width:500px){.tools,.benefits{grid-template-columns:1fr}.nav{padding:0 16px}.hero,.section{padding-left:16px;padding-right:16px}.brand{font-size:20px}}
-</style>
+<title>FormReady — Resize, Compress & Convert Documents for Applications</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<nav class="nav">
-  <div class="brand"><div class="logo"></div><span>FormReady</span></div>
-  <div class="links"><a href="#">Home</a><a href="#tools">Tools</a><a href="#app">Application Mode</a><a href="#about">About</a></div>
-  <button class="pill" onclick="alert('Prototype: theme control can be added here.')">☾</button>
-</nav>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand"><span class="brand-mark">FR</span>FormReady</a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="tools.html">Tools</a>
+      <a href="applications.html">Applications</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+      <a href="tools.html" class="btn btn-primary btn-sm">Open Tools</a>
+      <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
 
 <main>
-<section class="hero">
-  <div>
-    <h1>Make Your Documents<br><span class="grad">Application-Ready</span></h1>
-    <p class="lead">Compress, resize and convert your files to the exact size and format required for applications and exams.</p>
-    <div class="trust">
-      <div>🛡️ <b>Privacy-first</b>Local processing where possible</div>
-      <div>⚡ <b>Super Fast</b>Processed in seconds</div>
-      <div>📱 <b>Any Device</b>Mobile, tablet & desktop</div>
+  <section class="hero wrap">
+    <div class="hero-inner">
+      <span class="eyebrow">🇮🇳 Built for Indian exam & job applications</span>
+      <h1>Make Your Documents<br><span class="grad">Application-Ready</span></h1>
+      <p class="lead">Resize, compress and convert your photo, signature and PDF files to the exact size an application form demands — right in your browser, nothing uploaded to a server.</p>
+      <div class="hero-cta">
+        <a href="tools.html" class="btn btn-primary">Resize & Compress</a>
+        <a href="tools.html#convert" class="btn btn-outline">Convert Files</a>
+        <a href="applications.html" class="btn btn-ghost">Find My Exam →</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><b>15+</b><span>Exams & applications covered</span></div>
+        <div class="stat"><b>100%</b><span>Runs in your browser</span></div>
+        <div class="stat"><b>0</b><span>Files ever leave your device</span></div>
+      </div>
     </div>
-    <div class="upload" id="drop">
-      <div class="cloud">⇧</div>
-      <strong>Drag & drop your image here</strong>
-      <div>or</div>
-      <button class="choose" type="button" onclick="document.getElementById('file').click()">Choose File</button>
-      <input id="file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
-      <div class="small">Prototype supports JPG, PNG and WebP • Max 20 MB</div>
-    </div>
-    <div class="searches">
-      <small>POPULAR SEARCHES</small><br>
-      <span onclick="openTool('image')">Compress Photo to 50KB</span>
-      <span onclick="openTool('signature')">Signature 20KB</span>
-      <span onclick="openTool('pdf')">PDF to 200KB</span>
-      <span onclick="showApp('BPSC')">BPSC Photo Size</span>
-      <span onclick="showApp('UPSC')">UPSC Photo Size</span>
-    </div>
-  </div>
-  <div class="preview">
-    <div class="filebox"><div class="fileicon">🖼️</div><b>Before</b><p>IMG_2024.JPG</p><strong>1.2 MB</strong></div>
-    <div class="arrow">•••➜</div>
-    <div class="filebox"><div class="fileicon">🖼️</div><b>After</b><p>IMG_2024.JPG</p><strong class="after">50 KB</strong></div>
-  </div>
-</section>
+  </section>
 
-<section class="section" id="tools">
-<div class="wrap center">
-  <h2>Popular Tools</h2><p class="sub">Quick tools to resize, compress and convert your files</p>
-  <div class="tools">
-    <div class="tool" onclick="openTool('image')"><div class="toolicon">🖼️</div><h3>Image to Exact KB</h3><p>Compress an image to your target file size.</p></div>
-    <div class="tool" onclick="openTool('signature')"><div class="toolicon">✍️</div><h3>Signature to KB</h3><p>Resize a signature to an exact size.</p></div>
-    <div class="tool" onclick="openTool('pdf')"><div class="toolicon">📄</div><h3>PDF to Exact KB</h3><p>Prototype placeholder for PDF compression.</p></div>
-    <div class="tool" onclick="openTool('jpgpdf')"><div class="toolicon">🔄</div><h3>JPG to PDF</h3><p>Convert a JPG image into a PDF file.</p></div>
-    <div class="tool" onclick="openTool('pdfjpg')"><div class="toolicon">📑</div><h3>PDF to JPG</h3><p>PDF-to-image engine can be connected next.</p></div>
-  </div>
+  <section class="section wrap">
+    <div class="section-head">
+      <span class="tag">Start here</span>
+      <h2>Two things people need most</h2>
+      <p>Everything on FormReady rolls up into one of these — pick one to jump straight in.</p>
+    </div>
+    <div class="option-grid">
+      <div class="option-card resize">
+        <div class="opt-icon">
+          <svg class="icon" viewBox="0 0 24 24" width="26" height="26"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
+        </div>
+        <h3>Resize &amp; Compress</h3>
+        <p>Shrink a photo or signature down to an exact KB limit — 20 KB, 50 KB, whatever the form asks for — without losing clarity.</p>
+        <div class="chips"><span>Photo</span><span>Signature</span><span>JPG · PNG · WebP</span></div>
+        <button class="btn btn-primary btn-block" onclick="location.href='tools.html'">Open Resize Tools</button>
+      </div>
+      <div class="option-card convert">
+        <div class="opt-icon">
+          <svg class="icon" viewBox="0 0 24 24" width="26" height="26"><path d="M17 2l4 4-4 4M21 6H8a4 4 0 0 0-4 4v1M7 22l-4-4 4-4M3 18h13a4 4 0 0 0 4-4v-1"/></svg>
+        </div>
+        <h3>Convert Files</h3>
+        <p>Turn a scanned photo into a clean single-page PDF, or move between JPG, PNG and PDF — whichever format the application portal expects.</p>
+        <div class="chips"><span>JPG → PDF</span><span>PDF → JPG</span><span>More soon</span></div>
+        <button class="btn btn-accent btn-block" onclick="location.href='tools.html#convert'">Open Convert Tools</button>
+      </div>
+    </div>
+  </section>
 
-  <div class="appmode" id="app">
-    <div><h3>Application Mode <small style="color:#21a65a">NEW</small></h3><p>Choose an exam/application to see the document checklist.</p></div>
-    <div class="controls"><select id="exam"><option value="">Select Application / Exam</option><option>BPSC</option><option>UPSC</option><option>SSC</option><option>IBPS</option><option>Railway</option></select><button class="primary" onclick="showApp(document.getElementById('exam').value)">Get Requirements →</button></div>
-  </div>
-  <div id="notice" class="notice"></div>
-  <div class="benefits" id="about">
-    <div class="benefit">🔒 <b>Privacy-first</b>Processing happens locally for supported tools.</div>
-    <div class="benefit">🗑️ <b>No account required</b>Prototype stores no user profile.</div>
-    <div class="benefit">⚡ <b>Fast</b>Image compression happens in your browser.</div>
-    <div class="benefit">🇮🇳 <b>Made for applications</b>Built around common Indian form workflows.</div>
-  </div>
-</div>
-</section>
+  <section class="section wrap">
+    <div class="appmode-banner">
+      <div>
+        <span class="eyebrow" style="background:rgba(255,255,255,.12);color:#fff">🎓 Application Mode</span>
+        <h2>Applying for UPSC, SSC, IBPS, Railway or a state PSC exam?</h2>
+        <p>Pick your exam and get the photo, signature and document checklist for that specific application — then jump straight into the matching resize tool.</p>
+        <div class="hero-cta" style="justify-content:flex-start">
+          <a href="applications.html" class="btn btn-accent">Browse All Applications</a>
+        </div>
+        <div class="exam-chip-row">
+          <span class="exam-chip">UPSC</span><span class="exam-chip">SSC</span><span class="exam-chip">IBPS</span><span class="exam-chip">Railway</span><span class="exam-chip">BPSC</span><span class="exam-chip">+10 more</span>
+        </div>
+      </div>
+      <div class="appmode-grid">
+        <a class="mini" href="applications.html">UPSC<small>Civil Services</small></a>
+        <a class="mini" href="applications.html">SSC CGL<small>Central Govt</small></a>
+        <a class="mini" href="applications.html">IBPS PO<small>Banking</small></a>
+        <a class="mini" href="applications.html">RRB NTPC<small>Railway</small></a>
+        <a class="mini" href="applications.html">BPSC<small>State PSC</small></a>
+        <a class="mini" href="applications.html">CTET<small>Teaching</small></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head">
+      <span class="tag">How it works</span>
+      <h2>Three steps, zero uploads</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Choose a tool</h3><p>Pick Resize, Convert, or find your exam in Application Mode for the exact spec you need.</p></div>
+      <div class="step"><div class="num">2</div><h3>Drop your file</h3><p>Your photo, signature or PDF is processed locally in your browser's memory.</p></div>
+      <div class="step"><div class="num">3</div><h3>Download & submit</h3><p>Grab the resized or converted file and upload it straight to the application form.</p></div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head">
+      <span class="tag">Why FormReady</span>
+      <h2>Built for how Indian application forms actually work</h2>
+    </div>
+    <div class="benefit-grid">
+      <div class="benefit"><div class="bicon"><svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"/></svg></div><b>Privacy-first</b><p>Processing happens in your browser — files aren't uploaded to a server.</p></div>
+      <div class="benefit"><div class="bicon"><svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></div><b>Fast</b><p>Compression and conversion finish in seconds, even on slow connections.</p></div>
+      <div class="benefit"><div class="bicon"><svg class="icon" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></div><b>No account needed</b><p>No sign-up, no stored profile — open a tool and use it.</p></div>
+      <div class="benefit"><div class="bicon"><svg class="icon" viewBox="0 0 24 24" width="18" height="18"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div><b>Exam-aware</b><p>Application Mode is built around real Indian government exam workflows.</p></div>
+    </div>
+  </section>
 </main>
-<footer>FormReady prototype • Not affiliated with UPSC, BPSC, SSC, IBPS or any government body.</footer>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">FormReady</div>
+    <nav class="footer-links">
+      <a href="index.html">Home</a><a href="tools.html">Tools</a><a href="applications.html">Applications</a><a href="about.html">About</a>
+    </nav>
+    <p class="disclaimer">FormReady is an independent tool and is not affiliated with UPSC, SSC, IBPS, Railway, BPSC or any government body. Requirement details on the Applications page are placeholders — always confirm exact specifications against the current official notification before submitting.</p>
+  </div>
+</footer>
 
 <div class="modal" id="modal">
- <div class="card">
-  <button class="close" onclick="closeModal()">×</button>
-  <h2 id="modalTitle">Image to Exact KB</h2>
-  <p class="sub" id="modalDesc">Upload an image and choose the maximum target size.</p>
-  <input id="modalFile" type="file" accept="image/jpeg,image/png,image/webp">
-  <div id="imageControls" style="margin-top:16px">
-    <div class="row"><label>Target KB</label><input id="targetKb" type="number" min="5" max="5000" value="50"><button class="primary" onclick="compressImage()">Compress</button></div>
+  <div class="card-modal">
+    <div class="modal-top"><h2 id="modalTitle">Image to Exact KB</h2><button class="close" onclick="closeModal()">×</button></div>
+    <p class="modal-sub" id="modalDesc">Upload an image and choose the maximum target size.</p>
+    <input id="modalFile" type="file" accept="image/jpeg,image/png,image/webp">
+    <div id="imageControls" style="margin-top:6px">
+      <div class="row"><label>Target KB</label><input id="targetKb" type="number" min="5" max="5000" value="50"><button class="btn btn-primary btn-sm" onclick="compressImage()">Compress</button></div>
+    </div>
+    <div id="pdfControls" style="display:none;margin-top:6px"><button class="btn btn-primary btn-sm" onclick="makePdf()">Convert to PDF</button></div>
+    <div id="toolResult" class="result"></div>
   </div>
-  <div id="pdfControls" style="display:none;margin-top:16px"><button class="primary" onclick="makePdf()">Convert to PDF</button></div>
-  <div id="toolResult" class="result"></div>
- </div>
 </div>
 
-<script>
-let currentTool='image', sourceFile=null;
-const modal=document.getElementById('modal'), result=document.getElementById('toolResult');
-
-function openTool(type){
- currentTool=type; result.style.display='none';
- const title={image:'Image to Exact KB',signature:'Signature to KB',pdf:'PDF to Exact KB',jpgpdf:'JPG to PDF',pdfjpg:'PDF to JPG'}[type];
- document.getElementById('modalTitle').textContent=title;
- document.getElementById('modalFile').accept=(type==='image'||type==='signature'||type==='jpgpdf')?'image/jpeg,image/png,image/webp':'application/pdf';
- document.getElementById('imageControls').style.display=(type==='image'||type==='signature')?'block':'none';
- document.getElementById('pdfControls').style.display=type==='jpgpdf'?'block':'none';
- document.getElementById('modalDesc').textContent =
- type==='image'||type==='signature'?'Upload an image and choose the target maximum size.':
- type==='jpgpdf'?'Upload a JPG/PNG image to create a PDF.':
- type==='pdf'?'PDF compression is the next engine to connect in this prototype.':
- 'PDF-to-JPG conversion is the next engine to connect in this prototype.';
- modal.classList.add('open');
-}
-function closeModal(){modal.classList.remove('open')}
-document.getElementById('modalFile').addEventListener('change',e=>sourceFile=e.target.files[0]);
-
-async function compressImage(){
- if(!sourceFile){alert('Choose an image first.');return}
- const target=Number(document.getElementById('targetKb').value)*1024;
- if(!target || target<5120){alert('Choose a target of at least 5 KB.');return}
- const img=new Image();
- img.onload=async()=>{
-   let maxW=Math.min(img.naturalWidth,2500), maxH=Math.min(img.naturalHeight,2500);
-   let canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
-   canvas.width=maxW;canvas.height=Math.round(img.naturalHeight*(maxW/img.naturalWidth));
-   ctx.drawImage(img,0,0,canvas.width,canvas.height);
-   let lo=0.05,hi=0.98,best=null;
-   for(let i=0;i<14;i++){
-     const q=(lo+hi)/2;
-     const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',q));
-     if(blob.size<=target){best=blob;lo=q}else hi=q;
-   }
-   if(!best){
-     while(canvas.width>300 && !best){
-       canvas.width=Math.round(canvas.width*.85); canvas.height=Math.round(canvas.height*.85);
-       ctx.drawImage(img,0,0,canvas.width,canvas.height);
-       const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',0.55));
-       if(blob.size<=target) best=blob;
-     }
-   }
-   if(!best){alert('Target is too small for this image. Try a larger target.');return}
-   const url=URL.createObjectURL(best);
-   result.style.display='block';
-   result.innerHTML='<img class="previewImg" src="'+url+'"><b>✅ Ready: '+(best.size/1024).toFixed(1)+' KB</b><br><a class="choose" style="display:inline-block;margin-top:12px;text-decoration:none" download="formready-'+Math.round(best.size/1024)+'kb.jpg" href="'+url+'">Download JPG</a>';
- };
- img.src=URL.createObjectURL(sourceFile);
-}
-
-function jpgToPdfBytes(jpegBytes,w,h){
- const enc=new TextEncoder(), objects=[];
- const add=s=>{objects.push(enc.encode(s));return objects.length};
- const content=`q\\n${w} 0 0 ${h} 0 0 cm\\n/Im0 Do\\nQ`;
- const o1=add('<< /Type /Catalog /Pages 2 0 R >>');
- const o2=add('<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
- const o3=add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${w} ${h}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`);
- objects.push(enc.encode(`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\\nstream\\n`));
- const imageObjIndex=objects.length; objects.push(jpegBytes); objects.push(enc.encode('\\nendstream'));
- const contentIndex=objects.length+1; add(`<< /Length ${content.length} >>\\nstream\\n${content}\\nendstream`);
- let pdf=enc.encode('%PDF-1.4\\n%\\xFF\\xFF\\xFF\\xFF\\n'), offsets=[0];
- const full=[];
- function push(u){const old=pdf.length; const n=new Uint8Array(pdf.length+u.length);n.set(pdf);n.set(u,pdf.length);pdf=n;return old}
- // rebuild correctly with object numbers
- const objs=[
-  [1,objects[0]],
-  [2,objects[1]],
-  [3,objects[2]],
- ];
- let imgHead=objects[3], imgData=objects[4];
- objs.push([4,concat(imgHead,imgData,enc.encode('\\nendstream'))]);
- objs.push([5,objects[5]]);
- offsets=[0];
- for(const [num,data] of objs){offsets[num]=pdf.length; pdf=concat(pdf,enc.encode(`${num} 0 obj\\n`),data,enc.encode('\\nendobj\\n'))}
- const xref=pdf.length; pdf=concat(pdf,enc.encode(`xref\\n0 6\\n0000000000 65535 f \\n${offsets.slice(1).map(x=>String(x).padStart(10,'0')+' 00000 n ').join('\\n')}\\ntrailer\\n<< /Size 6 /Root 1 0 R >>\\nstartxref\\n${xref}\\n%%EOF`));
- return pdf;
-}
-function concat(...arrs){let n=arrs.reduce((a,b)=>a+b.length,0),out=new Uint8Array(n),p=0;for(const a of arrs){out.set(a,p);p+=a.length}return out}
-
-async function makePdf(){
- if(!sourceFile){alert('Choose an image first.');return}
- const img=new Image();img.onload=async()=>{
-   const c=document.createElement('canvas'),scale=Math.min(1600/img.naturalWidth,1600/img.naturalHeight,1);
-   c.width=Math.round(img.naturalWidth*scale);c.height=Math.round(img.naturalHeight*scale);
-   c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.88)); const bytes=new Uint8Array(await blob.arrayBuffer());
-   const pdf=jpgToPdfBytes(bytes,c.width,c.height),url=URL.createObjectURL(new Blob([pdf],{type:'application/pdf'}));
-   result.style.display='block';result.innerHTML='<b>✅ PDF created</b><br><a class="choose" style="display:inline-block;margin-top:12px;text-decoration:none" download="formready-document.pdf" href="'+url+'">Download PDF</a>';
- };img.src=URL.createObjectURL(sourceFile);
-}
-
-document.getElementById('file').addEventListener('change',e=>{if(e.target.files[0]){sourceFile=e.target.files[0];openTool('image');document.getElementById('modalFile').files=e.target.files}});
-const drop=document.getElementById('drop');
-drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag')});
-drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));
-drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag');const f=e.dataTransfer.files[0];if(f){sourceFile=f;openTool('image')}});
-
-function showApp(name){
- if(!name){alert('Select an application first.');return}
- const data={
-  BPSC:'BPSC selected. This prototype will show current photo/signature/document requirements here after they are verified from the latest official notification.',
-  UPSC:'UPSC selected. This prototype will show current photo/signature/document requirements here after they are verified from the latest official notification.',
-  SSC:'SSC selected. Current requirements will be displayed here from the relevant notification.',
-  IBPS:'IBPS selected. Current requirements will be displayed here from the relevant notification.',
-  Railway:'Railway selected. Current requirements will be displayed here from the relevant notification.'
- };
- const n=document.getElementById('notice');n.textContent=data[name]||'Select an application.';n.style.display='block';document.getElementById('app').scrollIntoView({behavior:'smooth'});
-}
-</script>
+<script src="app.js"></script>
 </body>
 </html>
