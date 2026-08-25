@@ -35,6 +35,8 @@
   </section>
 
   <section class="section wrap" style="padding-top:0">
+    <div class="trust-bar" id="trustBar"></div>
+
     <div class="filter-bar">
       <input id="examSearch" class="search-input" type="search" placeholder="Search exams — e.g. UPSC, SSC, IBPS…">
       <div class="cat-tabs">
@@ -47,23 +49,28 @@
         <button class="tool-tab" data-cat="Teaching">Teaching</button>
       </div>
     </div>
+    <div class="trend-row">
+      <span class="trend-label">Trending:</span>
+      <button class="trend-chip" data-q="IBPS">IBPS PO</button>
+      <button class="trend-chip" data-q="SSC CGL">SSC CGL</button>
+      <button class="trend-chip" data-q="UPSC">UPSC Civil Services</button>
+      <button class="trend-chip" data-q="RRB">RRB NTPC</button>
+    </div>
 
     <div class="exam-grid" id="examGrid"></div>
 
     <div class="exam-detail" id="examDetail">
+      <div class="breadcrumb" id="examBreadcrumb"></div>
       <div class="modal-top">
         <h2 id="examDetailTitle">Exam — Document Requirements</h2>
         <button class="close" onclick="document.getElementById('examDetail').classList.remove('open')">×</button>
       </div>
-      <div class="notice-box">These specs are placeholders until verified against the current official notification for this exam — always double-check the notification before submitting your form.</div>
-      <div class="spec-grid">
-        <div class="spec"><b>Photo</b><span>Size & format to be confirmed from the official notification.</span></div>
-        <div class="spec"><b>Signature</b><span>Size & format to be confirmed from the official notification.</span></div>
-        <div class="spec"><b>Document format</b><span>Usually JPG/PNG for images, PDF for documents — confirm per exam.</span></div>
-      </div>
+      <div class="notice-box" id="examNotice"></div>
+      <div class="spec-grid" id="examSpecs"></div>
       <div class="hero-cta" style="justify-content:flex-start">
         <a href="tools.html" class="btn btn-primary btn-sm">Resize a Photo</a>
         <a href="tools.html" class="btn btn-outline btn-sm">Resize a Signature</a>
+        <a href="#" id="examOfficialLink" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">View Official Notification →</a>
       </div>
     </div>
   </section>
@@ -75,7 +82,7 @@
     <nav class="footer-links">
       <a href="index.html">Home</a><a href="tools.html">Tools</a><a href="applications.html">Applications</a><a href="about.html">About</a>
     </nav>
-    <p class="disclaimer">FormReady is an independent tool and is not affiliated with UPSC, SSC, IBPS, Railway, BPSC or any government body. Requirement details shown here are placeholders — always confirm against the current official notification before submitting.</p>
+    <p class="disclaimer">FormReady is an independent tool and is not affiliated with UPSC, SSC, IBPS, Railway, BPSC or any government body. Requirement details shown here are compiled from official notifications where available (each exam shows its own "verified" date and source link) — always confirm against the current official notification before submitting.</p>
   </div>
 </footer>
 
