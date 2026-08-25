@@ -302,7 +302,7 @@ const APPLICATIONS=[
       minAge:21,ageAsOn:'1 Aug 2026',
       maxAgeByCategory:{General:32,EWS:32,OBC:35,SC:37,ST:37,PwBD:42},
       qualification:'Graduate degree, any discipline, no minimum percentage — final-year candidates may apply for Prelims but must prove graduation before Mains',
-      minQualLevel:'final-year-or-above',
+      minQualLevel:'graduate',
       notes:'General: 6 attempts, OBC: 9 attempts, SC/ST: unlimited — all counted only up to the age ceiling above.'
     },
     fillGuide:[
@@ -324,7 +324,7 @@ const APPLICATIONS=[
       minAge:18,ageAsOn:'1 Aug 2026',
       maxAgeByCategory:{General:32,EWS:32,OBC:35,SC:37,ST:37,PwBD:42},
       qualification:'Bachelor’s degree from a recognized university, any discipline for most posts (a few posts like JSO/AAO want a specific stream — check the post-wise chart)',
-      minQualLevel:'final-year-or-above',
+      minQualLevel:'graduate',
       notes:'⚠ The actual age ceiling is post-wise (18–27 for most Group C posts, up to 18–32 for JSO) — this checker uses the widest ceiling across all CGL posts, so a match means "eligible for at least one CGL post," not necessarily every post. Confirm the exact post-wise limit in the notification.'
     },
     fillGuide:[
@@ -341,7 +341,14 @@ const APPLICATIONS=[
     officialUrl:'http://ssc.gov.in/api/attachment/uploads/masterData/NoticeBoards/Notice_of_adv_chsl_2025.pdf',
     photo:{dims:'3.5 cm × 4.5 cm',minKB:20,maxKB:50,format:'JPEG/JPG',notes:'white background recommended'},
     signature:{dims:'4 cm × 2 cm',minKB:10,maxKB:20,format:'JPEG/JPG',notes:'PNG format and non-white backgrounds are commonly rejected'},
-    verified:'24 Aug 2026'},
+    verified:'24 Aug 2026',
+    eligibility:{
+      minAge:18,ageAsOn:'1 Jan 2026',
+      maxAgeByCategory:{General:27,EWS:27,OBC:30,SC:32,ST:32,PwBD:42},
+      qualification:'Passed Class 12 (or equivalent) from a recognized board — no graduation required. For DEO Grade-A specifically, Class 12 with Mathematics may be required.',
+      minQualLevel:'class12',
+      notes:'No minimum percentage in Class 12, and no cap on number of attempts.'
+    }},
   {code:'IBPS-PO',name:'IBPS PO',cat:'Banking',status:'open',
     notifTitle:'CRP PO/MT-XVI — Recruitment of Probationary Officers/Management Trainees (2027-28 vacancies)',
     applyStart:'01 Jul 2026',applyEnd:'26 Jul 2026 (extended)',
@@ -356,7 +363,7 @@ const APPLICATIONS=[
       minAge:20,ageAsOn:'1 Jul 2026',
       maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:40},
       qualification:'Graduation degree in any discipline from a recognized university, no minimum percentage',
-      minQualLevel:'final-year-or-above',
+      minQualLevel:'graduate',
       notes:'PwBD relaxation can run higher than shown (10–15 years depending on category+disability combination) — the figure above is a conservative estimate, confirm the exact combined relaxation in the notification.'
     },
     fillGuide:[
@@ -392,7 +399,7 @@ const APPLICATIONS=[
       minAge:21,ageAsOn:'1 Apr 2026',
       maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:'35–40 (exact figure not confirmed — check notification)'},
       qualification:'Graduation degree in any discipline — final-year candidates may apply provisionally with proof of graduation due before the interview stage',
-      minQualLevel:'final-year-or-above',
+      minQualLevel:'graduate',
       notes:'PwBD and ex-servicemen relaxation follows standard government norms but the precise ceiling wasn’t confirmed from available sources for this cycle — confirm in the notification.'
     },
     fillGuide:[
@@ -494,6 +501,111 @@ const APPLICATIONS=[
     signature:{dims:'Not applicable — IELTS does not require a separate signature upload',format:'—',notes:'—'},
     otherDocs:[{label:'Passport scan',notes:'Clear colour scan of your passport\'s first + last pages (plus any observation pages) · under 1 MB · JPG, JPEG, PNG or PDF · the same physical passport is required on test day'}],
     verified:'25 Aug 2026'},
+  {code:'SSC-MTS',name:'SSC MTS',cat:'Central Govt',status:'closed',
+    notifTitle:'SSC Multi Tasking Staff (Non-Technical) & Havaldar (CBIC/CBN) Examination',
+    officialUrl:'https://ssc.gov.in',
+    photo:{dims:'Not independently verified for this specific recruitment — uses the same SSC OTR portal as SSC CGL/CHSL',format:'JPG/JPEG (typical)',notes:'⚠ likely the same 3.5×4.5 cm / 20–50 KB pattern as other SSC exams, but confirm on the notification before uploading.'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ likely the same pattern as other SSC exams, confirm on the notification.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:18,ageAsOn:'1 Aug 2026',
+      maxAgeByCategory:{General:27,EWS:27,OBC:30,SC:32,ST:32,PwBD:42},
+      qualification:'Passed Class 10 (Matriculation) or equivalent — no higher qualification required',
+      minQualLevel:'class10',
+      notes:'⚠ The age ceiling is post-dependent: plain MTS posts are actually 18–25 (3 years lower than shown), Havaldar posts are 18–27 — this checker uses the wider Havaldar band, so a match means "eligible for at least one of the two post types," not necessarily MTS itself. Havaldar also has a physical test (e.g. 1600m walk in 15 min for men) this checker doesn\'t verify.'
+    }},
+  {code:'SSC-JE',name:'SSC JE',cat:'Central Govt',status:'closed',
+    notifTitle:'SSC Junior Engineer (Civil, Mechanical, Electrical) Examination',
+    officialUrl:'https://ssc.gov.in',
+    photo:{dims:'Not independently verified for this specific recruitment — uses the same SSC OTR portal as SSC CGL/CHSL',format:'JPG/JPEG (typical)',notes:'⚠ likely the same 3.5×4.5 cm / 20–50 KB pattern as other SSC exams, but confirm on the notification before uploading.'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ likely the same pattern as other SSC exams, confirm on the notification.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:18,ageAsOn:'1 Jan 2026',
+      maxAgeByCategory:{General:32,EWS:32,OBC:35,SC:37,ST:37,PwBD:'up to ~47 (15-year relaxation range — exact figure depends on disability category, confirm on notification)'},
+      qualification:'Diploma or B.E./B.Tech in Civil, Mechanical or Electrical Engineering — the specific branch required varies by post. Some diploma-holder posts also need 2 years of professional experience.',
+      minQualLevel:'class12',
+      notes:'⚠ This checker only verifies your qualification LEVEL, not your field — a non-engineering Class 12 pass or degree does NOT meet the real requirement even though it may show as a level-match here. The 32-year ceiling shown is the widest across departments (CPWD JE); most others cap at 30.'
+    }},
+  {code:'IBPS-SO',name:'IBPS SO',cat:'Banking',status:'closed',
+    notifTitle:'CRP SPL-XVI — Recruitment of Specialist Officers (IT, Law, HR, Marketing, Agriculture) for participating banks',
+    officialUrl:'https://www.ibps.in',
+    photo:{dims:'Not independently verified for this specific recruitment — uses the same IBPS portal as IBPS PO',format:'JPG/JPEG (typical)',notes:'⚠ likely the same 200×230 px / 20–50 KB pattern as IBPS PO, but confirm on the notification.'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ likely the same 140×60 px pattern as IBPS PO, confirm on the notification.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:20,ageAsOn:'1 Jul 2026',
+      maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:'up to ~40 (varies, confirm on notification)'},
+      qualification:'Varies by post: IT Officer needs a Computer Science/IT/Electronics degree or diploma; Law Officer needs an LLB plus State Bar Council enrolment; Agricultural Field Officer, HR and Marketing Officer each need a specific relevant degree (Agriculture, HR/Social Work, MBA-Marketing respectively). No prior work experience required.',
+      minQualLevel:'graduate',
+      notes:'⚠ This checker only verifies qualification LEVEL — the actual requirement is a SPECIFIC degree per post, not any graduation degree. Check which SO post matches your actual degree before applying.'
+    }},
+  {code:'SBI-SO',name:'SBI SO',cat:'Banking',status:'closed',
+    notifTitle:'SBI Specialist Cadre Officer (SCO) Recruitment — Manager/Deputy Manager and other specialist posts',
+    officialUrl:'https://sbi.co.in/careers',
+    photo:{dims:'Not independently verified for this specific recruitment — uses the same SBI portal as SBI PO',format:'JPG/JPEG (typical)',notes:'⚠ likely the same pattern as SBI PO, but confirm on the notification.'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ likely the same pattern as SBI PO, confirm on the notification.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:21,ageAsOn:'31 Jul 2026',
+      maxAgeByCategory:{General:35,EWS:35,OBC:38,SC:40,ST:40,PwBD:'varies, confirm on notification'},
+      qualification:'Relevant degree in IT, Finance, Law or Engineering depending on post — most SCO posts also require 1–5+ years of post-qualification work experience.',
+      minQualLevel:'graduate',
+      notes:'⚠ Age and experience requirements are heavily post-dependent (e.g. Deputy Manager posts run 25–35, some senior posts run 28–40) — this checker uses the widest band across all current SCO posts, so a match means "eligible for at least one post," not every post. Work experience (which this checker captures but doesn\'t gate on) is often the real deciding factor for SBI SO — check the specific post\'s requirement.'
+    }},
+  {code:'RBI-GB',name:'RBI Grade B',cat:'Banking',status:'closed',
+    notifTitle:'Reserve Bank of India Grade B (DR) Officer Recruitment',
+    officialUrl:'https://opportunities.rbi.org.in',
+    photo:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact photo/signature spec on the RBI recruitment portal.'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact spec on the RBI recruitment portal.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:21,ageAsOn:'1 Apr 2026',
+      maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:35},
+      qualification:'Graduation with minimum 60% marks (55% for SC/ST/PwBD) for the General stream; a Master\'s in Economics, Statistics or a related quantitative field with minimum 55% for the specialist DEPR/DSIM streams.',
+      minQualLevel:'graduate',
+      notes:'⚠ This checker doesn\'t verify your percentage — RBI Grade B has a real minimum-percentage cutoff, not just "any graduate," which most other exams on this list don\'t have. M.Phil/PhD holders get age relaxation up to 32/34 regardless of category.'
+    }},
+  {code:'NABARD-A',name:'NABARD Grade A',cat:'Banking',status:'closed',
+    notifTitle:'NABARD Grade A (Assistant Manager) Recruitment — RDBS, Legal, Rajbhasha and other streams',
+    officialUrl:'https://www.nabard.org',
+    photo:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact photo/signature spec on the NABARD recruitment portal.'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact spec on the NABARD recruitment portal.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:21,ageAsOn:'1 Jul 2026',
+      maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:'varies, confirm on notification'},
+      qualification:'Bachelor\'s degree with minimum 60% (55% for SC/ST/PwBD), or postgraduate degree with minimum 55% (50% for SC/ST/PwBD), from a recognized university.',
+      minQualLevel:'graduate',
+      notes:'⚠ This checker doesn\'t verify your percentage — NABARD has a real minimum-percentage cutoff. The Protocol & Security Service stream has a completely different 25–40 age band with NO category relaxation at all — this checker\'s numbers above are for the general RDBS/Legal streams only.'
+    }},
+  {code:'LIC-AAO',name:'LIC AAO',cat:'Banking',status:'closed',
+    notifTitle:'LIC Assistant Administrative Officer (Generalist) Recruitment',
+    officialUrl:'https://licindia.in/careers',
+    photo:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact photo/signature spec on the LIC recruitment portal.'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact spec on the LIC recruitment portal.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:21,ageAsOn:'1 Aug 2026',
+      maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:'varies, confirm on notification'},
+      qualification:'Bachelor\'s degree in any discipline from a recognized Indian university — no minimum percentage stated for the Generalist post.',
+      minQualLevel:'graduate',
+      notes:'Additional relaxation applies for existing LIC employees and ex-servicemen beyond the standard category relaxation shown.'
+    }},
+  {code:'RRB-JE',name:'RRB JE',cat:'Railway',status:'open',
+    notifTitle:'CEN 04/2026 — Junior Engineer & Depot Material Superintendent Recruitment',
+    applyStart:'14 Aug 2026',applyEnd:'13 Sep 2026',
+    officialUrl:'https://www.rrbapply.gov.in',
+    photo:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact photo/signature spec on rrbapply.gov.in — RRB photo/signature specs have historically been hard to verify against a stable official source (see RRB NTPC/Group D entries above).'},
+    signature:{dims:'Not independently verified for this specific recruitment',format:'JPG/JPEG (typical)',notes:'⚠ confirm exact spec on rrbapply.gov.in.'},
+    verified:'25 Aug 2026',
+    eligibility:{
+      minAge:18,ageAsOn:'1 Jan 2027',
+      maxAgeByCategory:{General:33,EWS:33,OBC:36,SC:38,ST:38,PwBD:'varies, confirm on notification'},
+      qualification:'3-year diploma or B.E./B.Tech in a relevant engineering discipline — varies by post. No prior work experience required.',
+      minQualLevel:'class12',
+      notes:'⚠ This checker only verifies qualification LEVEL, not field — a non-engineering Class 12 pass does NOT meet the real requirement even though it may show as a level-match here.'
+    }},
 ];
 
 function initials(name){
@@ -638,7 +750,9 @@ function showExamDetail(code){
   detail.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-const ELIGIBILITY_CODES=['UPSC','SSC-CGL','IBPS-PO','SBI-PO'];
+const ELIGIBILITY_CODES=['UPSC','SSC-CGL','SSC-CHSL','SSC-MTS','SSC-JE','IBPS-PO','IBPS-SO','SBI-PO','SBI-SO','RBI-GB','NABARD-A','LIC-AAO','RRB-JE'];
+const QUAL_RANK={below10:0,class10:1,class12:2,final:3,graduate:3,postgrad:3};
+const QUAL_MIN_RANK={class10:1,class12:2,graduate:3};
 
 function checkEligibility(){
   const age=Number($('eligAge').value);
@@ -648,16 +762,20 @@ function checkEligibility(){
   if(!results) return;
   if(!age||age<15||age>70){alert('Enter a valid age.');return}
 
-  const qualMeets=qual==='final'||qual==='graduate'||qual==='postgrad';
+  const userRank=QUAL_RANK[qual];
 
   const rows=ELIGIBILITY_CODES.map(code=>{
     const a=APPLICATIONS.find(x=>x.code===code);
     const e=a.eligibility;
+    if(!e) return null;
+    const minRank=QUAL_MIN_RANK[e.minQualLevel];
+    const qualMeets=userRank>=minRank;
     const maxAge=e.maxAgeByCategory[category];
     const ageUncertain=typeof maxAge!=='number';
+    const qualLabel=e.minQualLevel==='class10'?'Class 10 pass':e.minQualLevel==='class12'?'Class 12 pass':'at least final-year graduation';
     let verdict,cls;
     if(!qualMeets){
-      verdict='Not yet — needs at least final-year graduation';cls='closed';
+      verdict='Not yet — needs '+qualLabel;cls='closed';
     }else if(age<e.minAge){
       verdict='Not yet — below minimum age ('+e.minAge+')';cls='closed';
     }else if(ageUncertain){
@@ -668,10 +786,10 @@ function checkEligibility(){
       verdict='Likely not eligible — above age limit ('+maxAge+' for '+category+')';cls='closed';
     }
     return {a,verdict,cls};
-  });
+  }).filter(Boolean);
 
   results.innerHTML=
-    '<p class="fill-intro">Checked against the 4 exams we’ve researched eligibility rules for so far — more are coming. This is a soft match, not a verdict: always confirm the exact clause in the official notification before paying the application fee.</p>'+
+    '<p class="fill-intro">Checked against the '+rows.length+' exams we’ve researched eligibility rules for so far — more are coming. This only checks age, category and qualification <em>level</em> — not your specific field of study (e.g. SSC JE and RRB JE need an engineering diploma/degree specifically, not just any degree), and not work-experience requirements some specialist-officer roles have. This is a soft match, not a verdict: always confirm the exact clause in the official notification before paying the application fee.</p>'+
     rows.map(r=>
       '<div class="elig-row">'+
         '<div class="elig-exam">'+r.a.name+'</div>'+

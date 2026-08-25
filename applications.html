@@ -66,7 +66,9 @@
         </div>
         <div class="row"><label>Highest Qualification</label>
           <select id="eligQual">
-            <option value="below">Below graduation</option>
+            <option value="below10">Below Class 10</option>
+            <option value="class10">Class 10 pass</option>
+            <option value="class12">Class 12 pass</option>
             <option value="final">Final year of graduation</option>
             <option value="graduate">Graduate (degree completed)</option>
             <option value="postgrad">Post-graduate</option>
@@ -75,7 +77,7 @@
         <div class="row"><label>Year of graduation (if applicable)</label><input id="eligYear" type="number" min="1980" max="2035" placeholder="e.g. 2026"></div>
         <div class="row"><label>Years of work experience</label><input id="eligExp" type="number" min="0" max="45" placeholder="0 if none"></div>
       </div>
-      <p class="elig-hint">Graduation year and experience aren't used by any of the 4 exams checked below yet — none of them require a specific passing year or prior work experience — but we're capturing them for exams we add later that do.</p>
+      <p class="elig-hint">Graduation year and experience aren't used to auto-filter results yet — but a few specialist-officer roles below (like SBI SO) do have real experience requirements, flagged in their own notes instead of gated automatically.</p>
       <button class="btn btn-primary" onclick="checkEligibility()">Check My Eligibility</button>
       <div id="eligResults"></div>
     </div>
