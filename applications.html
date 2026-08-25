@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Applications — FormReady</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand"><span class="brand-mark">FR</span>FormReady</a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Home</a>
+      <a href="tools.html">Tools</a>
+      <a href="applications.html" aria-current="page">Applications</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+      <a href="tools.html" class="btn btn-primary btn-sm">Open Tools</a>
+      <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" style="padding:44px 0 20px">
+    <div class="hero-inner">
+      <span class="eyebrow">🎓 Application Mode</span>
+      <h1 style="font-size:38px">Find your <span class="grad">exam or application</span></h1>
+      <p class="lead">Search or filter by category, then open an exam to see its document checklist.</p>
+    </div>
+  </section>
+
+  <section class="section wrap" style="padding-top:0">
+    <div class="trust-bar" id="trustBar"></div>
+
+    <div class="filter-bar">
+      <input id="examSearch" class="search-input" type="search" placeholder="Search exams — e.g. UPSC, SSC, IBPS…">
+      <div class="cat-tabs">
+        <button class="tool-tab active" data-cat="All">All</button>
+        <button class="tool-tab" data-cat="Central Govt">Central Govt</button>
+        <button class="tool-tab" data-cat="Banking">Banking</button>
+        <button class="tool-tab" data-cat="Railway">Railway</button>
+        <button class="tool-tab" data-cat="Defence">Defence</button>
+        <button class="tool-tab" data-cat="State PSC">State PSC</button>
+        <button class="tool-tab" data-cat="Teaching">Teaching</button>
+      </div>
+    </div>
+    <div class="trend-row">
+      <span class="trend-label">Trending:</span>
+      <button class="trend-chip" data-q="IBPS">IBPS PO</button>
+      <button class="trend-chip" data-q="SSC CGL">SSC CGL</button>
+      <button class="trend-chip" data-q="UPSC">UPSC Civil Services</button>
+      <button class="trend-chip" data-q="RRB">RRB NTPC</button>
+    </div>
+
+    <div class="exam-grid" id="examGrid"></div>
+
+    <div class="exam-detail" id="examDetail">
+      <div class="breadcrumb" id="examBreadcrumb"></div>
+      <div class="modal-top">
+        <h2 id="examDetailTitle">Exam — Document Requirements</h2>
+        <button class="close" onclick="document.getElementById('examDetail').classList.remove('open')">×</button>
+      </div>
+      <div class="notice-box" id="examNotice"></div>
+      <div class="spec-grid" id="examSpecs"></div>
+      <div class="hero-cta" style="justify-content:flex-start">
+        <a href="tools.html" class="btn btn-primary btn-sm">Resize a Photo</a>
+        <a href="tools.html" class="btn btn-outline btn-sm">Resize a Signature</a>
+        <a href="#" id="examOfficialLink" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">View Official Notification →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">FormReady</div>
+    <nav class="footer-links">
+      <a href="index.html">Home</a><a href="tools.html">Tools</a><a href="applications.html">Applications</a><a href="about.html">About</a>
+    </nav>
+    <p class="disclaimer">FormReady is an independent tool and is not affiliated with UPSC, SSC, IBPS, Railway, BPSC or any government body. Requirement details shown here are compiled from official notifications where available (each exam shows its own "verified" date and source link) — always confirm against the current official notification before submitting.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+  renderApplications('All','');
+  initCatTabs();
+</script>
+</body>
+</html>
