@@ -1,4 +1,7 @@
 /* ===== shared chrome: theme + mobile nav ===== */
+const SUN_SVG='<svg class="icon" viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M17.99 17.99l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M17.99 6.01l1.77-1.77"/></svg>';
+const MOON_SVG='<svg class="icon" viewBox="0 0 24 24" width="18" height="18"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
 (function(){
   const root=document.documentElement;
   const saved=localStorage.getItem('fr-theme');
@@ -8,12 +11,12 @@
   document.addEventListener('DOMContentLoaded',()=>{
     const themeBtn=document.getElementById('themeToggle');
     if(themeBtn){
-      themeBtn.textContent=root.getAttribute('data-theme')==='dark'?'☀️':'🌙';
+      themeBtn.innerHTML=root.getAttribute('data-theme')==='dark'?SUN_SVG:MOON_SVG;
       themeBtn.addEventListener('click',()=>{
         const now=root.getAttribute('data-theme')==='dark'?'light':'dark';
         root.setAttribute('data-theme',now);
         localStorage.setItem('fr-theme',now);
-        themeBtn.textContent=now==='dark'?'☀️':'🌙';
+        themeBtn.innerHTML=now==='dark'?SUN_SVG:MOON_SVG;
       });
     }
     const navToggle=document.getElementById('navToggle');
@@ -35,17 +38,27 @@ function openTool(type){
   currentTool=type;
   const result=$('toolResult');
   if(result){result.style.display='none';result.innerHTML=''}
-  const title={image:'Image to Exact KB',signature:'Signature to Exact KB',pdf:'PDF to Exact KB',jpgpdf:'JPG/PNG to PDF',pdfjpg:'PDF to JPG'}[type];
+  const title={image:'Image to Exact KB',signature:'Signature to Exact KB',pdf:'PDF to Exact KB',jpgpdf:'JPG/PNG to PDF',pdfjpg:'PDF to JPG',dimensions:'Resize to Exact Pixels',formatconvert:'Convert Image Format',fileinfo:'Check File Info'}[type];
   $('modalTitle').textContent=title;
-  $('modalFile').accept=(type==='image'||type==='signature'||type==='jpgpdf')?'image/jpeg,image/png,image/webp':'application/pdf';
-  $('imageControls').style.display=(type==='image'||type==='signature')?'block':'none';
-  $('pdfControls').style.display=type==='jpgpdf'?'block':'none';
+  const imageTypes=['image','signature','jpgpdf','dimensions','formatconvert','fileinfo'];
+  $('modalFile').accept=imageTypes.includes(type)?'image/jpeg,image/png,image/webp':'application/pdf';
+  const show=(id,on)=>{const el=$(id);if(el)el.style.display=on?'block':'none'};
+  show('imageControls',type==='image'||type==='signature');
+  show('pdfControls',type==='jpgpdf');
+  show('pdfCompressControls',type==='pdf');
+  show('pdfExtractControls',type==='pdfjpg');
+  show('dimControls',type==='dimensions');
+  show('formatControls',type==='formatconvert');
+  show('infoControls',type==='fileinfo');
   $('modalDesc').textContent =
     type==='image'?'Upload a photo and choose the maximum target size.':
     type==='signature'?'Upload a signature image and choose the maximum target size.':
     type==='jpgpdf'?'Upload a JPG/PNG image to create a single-page PDF.':
-    type==='pdf'?'PDF compression engine is next up for this tool.':
-    'PDF-to-JPG conversion engine is next up for this tool.';
+    type==='pdf'?'Upload a PDF and choose the maximum target size — each page is rasterized and recompressed to fit.':
+    type==='pdfjpg'?'Upload a PDF to extract its first page as a JPG image.':
+    type==='dimensions'?'Upload a photo and set the exact width × height in pixels the form requires.':
+    type==='formatconvert'?'Upload an image and pick the format the application portal expects.':
+    'Upload any photo to instantly see its exact dimensions, size and format.';
   modal.classList.add('open');
 }
 function closeModal(){const m=$('modal');if(m)m.classList.remove('open')}
@@ -106,26 +119,35 @@ async function compressImage(){
 
 function concat(...arrs){let n=arrs.reduce((a,b)=>a+b.length,0),out=new Uint8Array(n),p=0;for(const a of arrs){out.set(a,p);p+=a.length}return out}
 
-function jpgToPdfBytes(jpegBytes,w,h){
-  const enc=new TextEncoder(),objects=[];
-  const add=s=>{objects.push(enc.encode(s));return objects.length};
-  const content=`q\n${w} 0 0 ${h} 0 0 cm\n/Im0 Do\nQ`;
-  add('<< /Type /Catalog /Pages 2 0 R >>');
-  add('<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
-  add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${w} ${h}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`);
-  objects.push(enc.encode(`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`));
-  objects.push(jpegBytes);
-  objects.push(enc.encode('\nendstream'));
-  add(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+function multiPagePdfBytes(pages){
+  const enc=new TextEncoder();
+  const n=pages.length;
+  const kids=pages.map((p,i)=>(3+i*3)+' 0 R').join(' ');
+  const objs=[
+    {num:1,data:enc.encode(`<< /Type /Catalog /Pages 2 0 R >>`)},
+    {num:2,data:enc.encode(`<< /Type /Pages /Kids [${kids}] /Count ${n} >>`)}
+  ];
+  pages.forEach((p,i)=>{
+    const pageNum=3+i*3,imgNum=pageNum+1,contentNum=pageNum+2;
+    const content=`q\n${p.w} 0 0 ${p.h} 0 0 cm\n/Im0 Do\nQ`;
+    objs.push({num:pageNum,data:enc.encode(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${p.w} ${p.h}] /Resources << /XObject << /Im0 ${imgNum} 0 R >> >> /Contents ${contentNum} 0 R >>`)});
+    const imgHeader=enc.encode(`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.bytes.length} >>\nstream\n`);
+    objs.push({num:imgNum,data:concat(imgHeader,p.bytes,enc.encode('\nendstream'))});
+    objs.push({num:contentNum,data:enc.encode(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`)});
+  });
   let pdf=enc.encode('%PDF-1.4\n%\xFF\xFF\xFF\xFF\n');
-  const objs=[[1,objects[0]],[2,objects[1]],[3,objects[2]]];
-  objs.push([4,concat(objects[3],objects[4],enc.encode('\nendstream'))]);
-  objs.push([5,objects[5]]);
   const offsets=[0];
-  for(const [num,data] of objs){offsets[num]=pdf.length;pdf=concat(pdf,enc.encode(`${num} 0 obj\n`),data,enc.encode('\nendobj\n'))}
+  for(const {num,data} of objs){offsets[num]=pdf.length;pdf=concat(pdf,enc.encode(`${num} 0 obj\n`),data,enc.encode('\nendobj\n'))}
   const xref=pdf.length;
-  pdf=concat(pdf,enc.encode(`xref\n0 6\n0000000000 65535 f \n${offsets.slice(1).map(x=>String(x).padStart(10,'0')+' 00000 n ').join('\n')}\ntrailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`));
+  const size=offsets.length;
+  let xrefTable=`xref\n0 ${size}\n0000000000 65535 f \n`;
+  for(let i=1;i<size;i++) xrefTable+=String(offsets[i]||0).padStart(10,'0')+' 00000 n \n';
+  pdf=concat(pdf,enc.encode(xrefTable),enc.encode(`trailer\n<< /Size ${size} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`));
   return pdf;
+}
+
+function jpgToPdfBytes(jpegBytes,w,h){
+  return multiPagePdfBytes([{bytes:jpegBytes,w,h}]);
 }
 
 async function makePdf(){
@@ -146,6 +168,124 @@ async function makePdf(){
   img.src=URL.createObjectURL(sourceFile);
 }
 
+async function resizeToDimensions(){
+  const result=$('toolResult');
+  if(!sourceFile){alert('Choose an image first.');return}
+  const w=Number($('targetW').value),h=Number($('targetH').value);
+  if(!w||!h||w<10||h<10){alert('Enter a valid width and height.');return}
+  const img=new Image();
+  img.onload=async()=>{
+    const c=document.createElement('canvas');
+    c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
+    const url=URL.createObjectURL(blob);
+    result.style.display='block';
+    result.innerHTML='<img class="previewImg" src="'+url+'"><b>✅ Resized to '+w+'×'+h+' px</b><br><a class="btn btn-primary btn-sm" style="margin-top:12px;text-decoration:none;display:inline-block" download="formready-'+w+'x'+h+'.jpg" href="'+url+'">Download JPG</a>';
+  };
+  img.src=URL.createObjectURL(sourceFile);
+}
+
+async function convertFormat(){
+  const result=$('toolResult');
+  if(!sourceFile){alert('Choose an image first.');return}
+  const mime=$('targetFormat').value;
+  const ext=mime==='image/png'?'png':mime==='image/webp'?'webp':'jpg';
+  const img=new Image();
+  img.onload=async()=>{
+    const c=document.createElement('canvas');
+    c.width=img.naturalWidth;c.height=img.naturalHeight;
+    c.getContext('2d').drawImage(img,0,0);
+    const blob=await new Promise(r=>c.toBlob(r,mime,.92));
+    if(!blob){alert('Your browser cannot export this format.');return}
+    const url=URL.createObjectURL(blob);
+    result.style.display='block';
+    result.innerHTML='<img class="previewImg" src="'+url+'"><b>✅ Converted to '+ext.toUpperCase()+'</b><br><a class="btn btn-primary btn-sm" style="margin-top:12px;text-decoration:none;display:inline-block" download="formready-converted.'+ext+'" href="'+url+'">Download '+ext.toUpperCase()+'</a>';
+  };
+  img.src=URL.createObjectURL(sourceFile);
+}
+
+function checkFileInfo(){
+  const result=$('toolResult');
+  if(!sourceFile){alert('Choose a file first.');return}
+  const img=new Image();
+  img.onload=()=>{
+    result.style.display='block';
+    result.innerHTML='<img class="previewImg" src="'+img.src+'"><b>'+sourceFile.name+'</b><br>'+
+      '<span style="color:var(--muted);font-size:13px;line-height:1.8">'+
+      img.naturalWidth+' × '+img.naturalHeight+' px<br>'+
+      (sourceFile.size/1024).toFixed(1)+' KB<br>'+
+      (sourceFile.type||'unknown type')+'</span>';
+  };
+  img.src=URL.createObjectURL(sourceFile);
+}
+
+async function renderPdfPageToCanvas(file,pageNum,scale){
+  const buf=await file.arrayBuffer();
+  const pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
+  const page=await pdf.getPage(pageNum);
+  const viewport=page.getViewport({scale});
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.round(viewport.width);canvas.height=Math.round(viewport.height);
+  await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
+  return {canvas,pageCount:pdf.numPages};
+}
+
+async function pdfToJpg(){
+  const result=$('toolResult');
+  if(!sourceFile){alert('Choose a PDF first.');return}
+  if(!window.pdfjsLib){alert('PDF engine still loading — try again in a second.');return}
+  result.style.display='block';
+  result.innerHTML='<span style="color:var(--muted)">Rendering page 1…</span>';
+  try{
+    const {canvas,pageCount}=await renderPdfPageToCanvas(sourceFile,1,2);
+    const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',.92));
+    const url=URL.createObjectURL(blob);
+    result.innerHTML='<img class="previewImg" src="'+url+'"><b>✅ Page 1 extracted'+(pageCount>1?' (PDF has '+pageCount+' pages — only page 1 is extracted)':'')+'</b><br><a class="btn btn-primary btn-sm" style="margin-top:12px;text-decoration:none;display:inline-block" download="formready-page1.jpg" href="'+url+'">Download JPG</a>';
+  }catch(e){
+    result.innerHTML='<b style="color:var(--danger)">Could not read this PDF.</b><br><span style="font-size:12px;color:var(--muted)">'+e.message+'</span>';
+  }
+}
+
+async function compressPdf(){
+  const result=$('toolResult');
+  if(!sourceFile){alert('Choose a PDF first.');return}
+  if(!window.pdfjsLib){alert('PDF engine still loading — try again in a second.');return}
+  const target=Number($('pdfTargetKb').value)*1024;
+  if(!target||target<20480){alert('Choose a target of at least 20 KB.');return}
+  result.style.display='block';
+  result.innerHTML='<span style="color:var(--muted)">Reading PDF…</span>';
+  try{
+    const buf=await sourceFile.arrayBuffer();
+    const pdfDoc=await window.pdfjsLib.getDocument({data:buf}).promise;
+    const n=pdfDoc.numPages;
+    const perPageBudget=Math.max(Math.floor(target/n)-300,4096);
+    const pages=[];
+    for(let i=1;i<=n;i++){
+      result.innerHTML='<span style="color:var(--muted)">Compressing page '+i+' of '+n+'…</span>';
+      const page=await pdfDoc.getPage(i);
+      const viewport=page.getViewport({scale:1.5});
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.round(viewport.width);canvas.height=Math.round(viewport.height);
+      await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
+      let lo=0.05,hi=0.95,best=null;
+      for(let k=0;k<12;k++){
+        const q=(lo+hi)/2;
+        const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',q));
+        if(blob.size<=perPageBudget){best=blob;lo=q}else hi=q;
+      }
+      if(!best) best=await new Promise(r=>canvas.toBlob(r,'image/jpeg',0.05));
+      const bytes=new Uint8Array(await best.arrayBuffer());
+      pages.push({bytes,w:canvas.width,h:canvas.height});
+    }
+    const pdfBytes=multiPagePdfBytes(pages);
+    const url=URL.createObjectURL(new Blob([pdfBytes],{type:'application/pdf'}));
+    result.innerHTML='<b>✅ Compressed to '+(pdfBytes.length/1024).toFixed(1)+' KB ('+n+' page'+(n>1?'s':'')+')</b><br><span style="font-size:12px;color:var(--muted)">Pages are rasterized to hit your target — great for scanned documents, but text is no longer selectable.</span><br><a class="btn btn-primary btn-sm" style="margin-top:12px;text-decoration:none;display:inline-block" download="formready-compressed.pdf" href="'+url+'">Download PDF</a>';
+  }catch(e){
+    result.innerHTML='<b style="color:var(--danger)">Could not compress this PDF.</b><br><span style="font-size:12px;color:var(--muted)">'+e.message+'</span>';
+  }
+}
+
 /* ===== applications data =====
    Compiled 24 Aug 2026 from official notifications/portals where possible.
    "verified" = date this record was compiled. Always re-check the linked
@@ -157,14 +297,44 @@ const APPLICATIONS=[
     officialUrl:'https://www.upsc.gov.in/sites/default/files/Notif-CSP-2026-Engl-060226Rev.pdf',
     photo:{dims:'350 × 350 px',minKB:20,maxKB:300,format:'JPG/JPEG',notes:'white/off-white background, face ~75% of frame, filename must be photo.jpg'},
     signature:{dims:'~350–500 px wide (exact box unconfirmed)',minKB:20,maxKB:100,format:'JPG/JPEG',notes:'black ink, white background, filename must be signature.jpg — re-verify exact px on upsconline.nic.in at apply time'},
-    verified:'24 Aug 2026'},
+    verified:'24 Aug 2026',
+    eligibility:{
+      minAge:21,ageAsOn:'1 Aug 2026',
+      maxAgeByCategory:{General:32,EWS:32,OBC:35,SC:37,ST:37,PwBD:42},
+      qualification:'Graduate degree, any discipline, no minimum percentage — final-year candidates may apply for Prelims but must prove graduation before Mains',
+      minQualLevel:'final-year-or-above',
+      notes:'General: 6 attempts, OBC: 9 attempts, SC/ST: unlimited — all counted only up to the age ceiling above.'
+    },
+    fillGuide:[
+      {field:'One Time Registration (OTR)',enter:'Complete this first, before anything else — a single profile reused for every future UPSC exam (CSE, NDA, CDS and more)',example:'—',note:'⚠ Once you use your one allowed OTR update, no further changes to any OTR field are possible — proofread before that, not after.'},
+      {field:'Contact Details',enter:'An email and mobile number you check daily',example:'—',note:'Both are OTP-verified during OTR, and every UPSC communication — including your e-admit card — comes through these two.'},
+      {field:'Password & Security Questions',enter:'A strong password plus answers you’ll actually remember months later',example:'—',note:'You’ll need these to recover your OTR account if you get locked out closer to the exam.'},
+      {field:'Correspondence & Permanent Address',enter:'Fill both fully, or tick the “same as above” option if they match',example:'—',note:'—'},
+      {field:'Photo & Signature',enter:'Upload per the spec in the Document Requirements tab above',example:'—',note:'Filenames must literally be photo.jpg and signature.jpg — this is stated verbatim in UPSC’s own notification.'},
+      {field:'Exam Centre, Optional Subject, Mains Language, Service Preferences (Part 2)',enter:'Only fill this after OTR is fully complete',example:'—',note:'Choose your optional subject deliberately — it’s one of the hardest fields to live with later even where it is technically editable.'}
+    ]},
   {code:'SSC-CGL',name:'SSC CGL',cat:'Central Govt',status:'closed',
     notifTitle:'SSC CGL 2025 (most recent cycle — SSC CGL 2026 notification not yet released as of today)',
     applyStart:'09 Jun 2025',applyEnd:'04 Jul 2025',
     officialUrl:'https://ssc.gov.in/api/attachment/uploads/masterData/NoticeBoards/Notice_of_adv_cgl_2025.pdf',
     photo:{dims:'3.5 cm × 4.5 cm',minKB:20,maxKB:50,format:'JPEG/JPG'},
     signature:{dims:'4 cm × 2 cm',minKB:10,maxKB:20,format:'JPEG/JPG',notes:'signed on white paper, black ink pen'},
-    verified:'24 Aug 2026'},
+    verified:'24 Aug 2026',
+    eligibility:{
+      minAge:18,ageAsOn:'1 Aug 2026',
+      maxAgeByCategory:{General:32,EWS:32,OBC:35,SC:37,ST:37,PwBD:42},
+      qualification:'Bachelor’s degree from a recognized university, any discipline for most posts (a few posts like JSO/AAO want a specific stream — check the post-wise chart)',
+      minQualLevel:'final-year-or-above',
+      notes:'⚠ The actual age ceiling is post-wise (18–27 for most Group C posts, up to 18–32 for JSO) — this checker uses the widest ceiling across all CGL posts, so a match means "eligible for at least one CGL post," not necessarily every post. Confirm the exact post-wise limit in the notification.'
+    },
+    fillGuide:[
+      {field:'One Time Registration (OTR)',enter:'Complete this first — one profile reused for every SSC exam: CGL, CHSL, MTS and more',example:'—',note:'Errors made here silently propagate into every SSC form you fill afterward — get it right once.'},
+      {field:'Full Name, DOB, Gender, Category (inside OTR)',enter:'Exactly as on your Class 10 (Matriculation) certificate',example:'RAHUL KUMAR SHARMA — not "Rahul K. Sharma"',note:'⚠ These fields lock after first submission. A spelling mismatch with your certificate is a common rejection reason at document verification.'},
+      {field:'Exam & Post Preferences',enter:'Select Combined Graduate Level Examination, then rank your exam centres and post preferences in genuine priority order',example:'—',note:'⚠ Post-preference order cannot be changed after final submission — no exceptions, per SSC’s own rules.'},
+      {field:'Educational Qualification',enter:'Institution name, board/university, year of passing and percentage for Class 10, 12 and Bachelor’s',example:'—',note:'Keep your certificates open in another tab while filling this — typos here are a frequent cause of rejection at verification.'},
+      {field:'Photo & Signature',enter:'Upload per the spec in the Document Requirements tab above',example:'—',note:'The portal rejects out-of-spec files immediately — resize before you start this step, not after.'},
+      {field:'Final Review',enter:'Re-read every field before clicking submit',example:'—',note:'SSC does open a short correction window, but not everything is editable, and each correction costs a fee (₹200 for the first, ₹500 for a second) — treat your first submission as close to final as possible.'}
+    ]},
   {code:'SSC-CHSL',name:'SSC CHSL',cat:'Central Govt',status:'closed',
     notifTitle:'SSC CHSL 2025 (most recent cycle — SSC CHSL 2026 notification not yet released as of today)',
     applyStart:'23 Jun 2025',applyEnd:'18 Jul 2025',
@@ -181,7 +351,23 @@ const APPLICATIONS=[
     otherDocs:[
       {label:'Left thumb impression',notes:'240 × 240 px @ 200 DPI (~3×3 cm) · 20–50 KB · JPG, black/blue ink on white paper'},
       {label:'Handwritten declaration',notes:'800 × 400 px @ 200 DPI (~10×5 cm) · 50–100 KB · JPG, black ink, English, not capitals'}],
-    verified:'24 Aug 2026'},
+    verified:'24 Aug 2026',
+    eligibility:{
+      minAge:20,ageAsOn:'1 Jul 2026',
+      maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:40},
+      qualification:'Graduation degree in any discipline from a recognized university, no minimum percentage',
+      minQualLevel:'final-year-or-above',
+      notes:'PwBD relaxation can run higher than shown (10–15 years depending on category+disability combination) — the figure above is a conservative estimate, confirm the exact combined relaxation in the notification.'
+    },
+    fillGuide:[
+      {field:'Full Name',enter:'Exactly as on your Class 10 certificate',example:'RAHUL KUMAR SHARMA',note:'⚠ Locked after first submission — no correction window for this field. A mismatch with your certificates causes rejection at document verification.'},
+      {field:'Father’s / Mother’s Name',enter:'As per your Class 10 certificate or official ID',example:'SURESH KUMAR SHARMA',note:'Same lock-after-submission rule as your own name.'},
+      {field:'Date of Birth',enter:'DD-MM-YYYY, matching your Class 10 certificate exactly',example:'15-08-2001',note:'⚠ Also locked after submission — a common error is transposing the day and month.'},
+      {field:'Category',enter:'Select your actual category (General/EWS/OBC-NCL/SC/ST/PwBD)',example:'OBC-NCL',note:'⚠ Locked after submission. Claiming a reserved category you’re not entitled to is treated as fraud, not a correctable mistake — never guess this field.'},
+      {field:'Mobile Number & Email',enter:'An active number and inbox you check daily',example:'—',note:'Both are OTP-verified at registration and used for every update about this application, including your admit card.'},
+      {field:'Exam Centre Preference',enter:'Choose in genuine order of preference',example:'—',note:'You may not get your first choice, but listing centres you can’t realistically travel to just to "save time" is a common regret.'},
+      {field:'Photo & Signature Upload',enter:'Upload per the spec in the Document Requirements tab above',example:'—',note:'Use the Resize tools first to hit the exact spec, then come back and upload — re-uploading after a rejection mid-session can time out your form.'}
+    ]},
   {code:'IBPS-CL',name:'IBPS Clerk',cat:'Banking',status:'open',
     notifTitle:'CRP CSA-XVI — Recruitment of Customer Service Associates (2027-28 vacancies)',
     applyStart:'01 Aug 2026',applyEnd:'28 Aug 2026 (extended)',
@@ -201,7 +387,22 @@ const APPLICATIONS=[
     otherDocs:[
       {label:'Left thumb impression',notes:'240 × 240 px @ 200 DPI (~3×3 cm) · 20–50 KB'},
       {label:'Handwritten declaration',notes:'800 × 400 px @ 200 DPI (~10×5 cm) · 50–100 KB'}],
-    verified:'24 Aug 2026'},
+    verified:'24 Aug 2026',
+    eligibility:{
+      minAge:21,ageAsOn:'1 Apr 2026',
+      maxAgeByCategory:{General:30,EWS:30,OBC:33,SC:35,ST:35,PwBD:'35–40 (exact figure not confirmed — check notification)'},
+      qualification:'Graduation degree in any discipline — final-year candidates may apply provisionally with proof of graduation due before the interview stage',
+      minQualLevel:'final-year-or-above',
+      notes:'PwBD and ex-servicemen relaxation follows standard government norms but the precise ceiling wasn’t confirmed from available sources for this cycle — confirm in the notification.'
+    },
+    fillGuide:[
+      {field:'Basic Registration',enter:'Name, email and mobile to create your provisional registration',example:'—',note:'This step generates your registration number and password — save both immediately, you’ll need them to log back in and finish the form.'},
+      {field:'Category',enter:'Select your actual category — UR/OBC/SC/ST/EWS/PwBD',example:'OBC',note:'⚠ Selecting the wrong category (e.g. General instead of OBC) usually cannot be corrected after submission, and directly affects your application fee.'},
+      {field:'Educational Qualification',enter:'Mark your degree status accurately',example:'"Completed" or "Appearing"',note:'—'},
+      {field:'Father’s/Mother’s Name, Gender, Marital Status, Address',enter:'As per your official documents',example:'—',note:'—'},
+      {field:'Photo, Signature, Left Thumb Impression, Handwritten Declaration',enter:'Upload all four per the spec in the Document Requirements tab above',example:'—',note:'⚠ SBI PO requires all four uploads, not just photo and signature — the thumb impression and declaration are easy to miss on a first attempt.'},
+      {field:'Application Fee',enter:'₹750 for UR/EWS/OBC · NIL for SC/ST/PwBD, paid by card or net banking',example:'—',note:'After payment, click Final Submit, then download and save both the e-receipt and the filled application PDF — you may need either later.'}
+    ]},
   {code:'SBI-CL',name:'SBI Clerk',cat:'Banking',status:'open',
     notifTitle:'Advt No. CRPD/CR/2026-27/17 — Recruitment of Junior Associates (Customer Support & Sales)',
     applyStart:'11 Aug 2026',applyEnd:'31 Aug 2026',
@@ -267,15 +468,42 @@ const APPLICATIONS=[
     photo:{dims:'3.5 cm × 4.5 cm',minKB:10,maxKB:100,format:'JPG/JPEG',notes:'recent passport-size colour photo, light/white background'},
     signature:{dims:'3.5 cm × 1.5 cm',minKB:3,maxKB:30,format:'JPG/JPEG'},
     verified:'24 Aug 2026'},
+  {code:'CAT',name:'CAT (IIM)',cat:'Higher Education',status:'open',
+    notifTitle:'Common Admission Test 2026 — conducted by IIM Indore for admission to the IIMs and 1,300+ other B-schools',
+    applyStart:'03 Aug 2026',applyEnd:'15 Sep 2026',
+    officialUrl:'https://iimcat.ac.in',
+    photo:{dims:'35 mm × 45 mm (min 150×150 px)',minKB:80,maxKB:1000,format:'JPG/JPEG',notes:'⚠ compiled from secondary/aggregator sources, not the official CAT Information Bulletin directly — recent colour photo, white/light background, not older than 6 months. Re-verify on iimcat.ac.in before uploading.'},
+    signature:{dims:'80 mm × 35 mm (min 80×35 px)',maxKB:80,format:'JPG/JPEG',notes:'⚠ compiled from secondary sources — signed in black/blue ink on plain white paper. Re-verify on iimcat.ac.in before uploading.'},
+    verified:'25 Aug 2026'},
+  {code:'GRE',name:'GRE General Test',cat:'Higher Education',status:'open',
+    notifTitle:'GRE General Test — administered year-round by ETS; registration is rolling, not a single open/close window like Indian govt exams',
+    officialUrl:'https://www.ets.org/gre/test-takers/general-test/register.html',
+    photo:{dims:'Not applicable — GRE registration has no photo/signature file upload step',format:'—',notes:'Unlike Indian govt exams, GRE verifies you in person: bring a valid, unexpired government-issued photo ID with a signature to the test center. A passport is strongly recommended, and mandatory for most international test-takers. Photocopies are not accepted.'},
+    signature:{dims:'Not applicable',format:'—',notes:'Your signature is checked against your ID at the test center, not uploaded as a file.'},
+    verified:'25 Aug 2026'},
+  {code:'GMAT',name:'GMAT Focus Edition',cat:'Higher Education',status:'open',
+    notifTitle:'GMAT Focus Edition — administered year-round by GMAC/mba.com; rolling registration, no fixed application window like Indian govt exams',
+    officialUrl:'https://www.mba.com/exams/gmat-exam',
+    photo:{dims:'Not applicable — GMAT registration has no photo/signature file upload step',format:'—',notes:'Like GRE, GMAT verifies you in person: a valid, unexpired government-issued photo ID with your signature and date of birth is required at the test center. For test-takers in India, a valid Indian passport is the only accepted ID — both in person and for the online exam.'},
+    signature:{dims:'Not applicable',format:'—',notes:'Checked against your ID at the test center, not uploaded as a file.'},
+    verified:'25 Aug 2026'},
+  {code:'IELTS',name:'IELTS',cat:'Higher Education',status:'open',
+    notifTitle:'IELTS — administered by IDP India; test dates run continuously through the year, no fixed application window',
+    officialUrl:'https://ielts.idp.com/',
+    photo:{dims:'Recent passport-size photograph — exact px/KB not stated in secondary sources',format:'JPG/JPEG (typical)',notes:'⚠ compiled from secondary/aggregator sources, not the official IDP portal directly. Re-verify the exact size on ielts.idp.com at registration.'},
+    signature:{dims:'Not applicable — IELTS does not require a separate signature upload',format:'—',notes:'—'},
+    otherDocs:[{label:'Passport scan',notes:'Clear colour scan of your passport\'s first + last pages (plus any observation pages) · under 1 MB · JPG, JPEG, PNG or PDF · the same physical passport is required on test day'}],
+    verified:'25 Aug 2026'},
 ];
 
 function initials(name){
-  return name.split(/[\s-]+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  return name.replace(/[()]/g,'').split(/[\s-]+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
 }
 
 const CAT_CLASS={
   'Central Govt':'cat-central','Banking':'cat-banking','Railway':'cat-railway',
-  'Defence':'cat-defence','State PSC':'cat-state','Teaching':'cat-teaching'
+  'Defence':'cat-defence','State PSC':'cat-state','Teaching':'cat-teaching',
+  'Higher Education':'cat-highered'
 };
 
 function parseExamDate(str){
@@ -378,12 +606,80 @@ function showExamDetail(code){
   }
   specs.innerHTML=html;
 
+  const tabs=$('detailTabs'),guideEl=$('examFillGuide'),specsEl=$('examSpecs');
+  if(a.fillGuide&&a.fillGuide.length){
+    tabs.style.display='flex';
+    guideEl.innerHTML='<p class="fill-intro">Compiled from the official notification and the application steps it describes — screens can shift slightly between cycles, so treat this as a companion while you fill the real form, not a replacement for reading your own entries before final submit.</p>'+
+      a.fillGuide.map(f=>
+        '<div class="fill-row">'+
+          '<div class="fill-field">'+f.field+'</div>'+
+          '<div class="fill-body">'+
+            '<div><b>Enter:</b> '+f.enter+'</div>'+
+            (f.example&&f.example!=='—'?'<div><b>Example:</b> '+f.example+'</div>':'')+
+            (f.note&&f.note!=='—'?'<div class="fill-note'+(f.note.startsWith('⚠')?' warn':'')+'">'+f.note+'</div>':'')+
+          '</div>'+
+        '</div>').join('');
+    specsEl.style.display='grid';guideEl.style.display='none';
+    const tabBtns=tabs.querySelectorAll('button');
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    tabBtns[0].classList.add('active');
+    tabBtns[0].onclick=()=>{tabBtns.forEach(b=>b.classList.remove('active'));tabBtns[0].classList.add('active');specsEl.style.display='grid';guideEl.style.display='none'};
+    tabBtns[1].onclick=()=>{tabBtns.forEach(b=>b.classList.remove('active'));tabBtns[1].classList.add('active');specsEl.style.display='none';guideEl.style.display='block'};
+  }else{
+    tabs.style.display='none';
+    specsEl.style.display='grid';guideEl.style.display='none';
+  }
+
   const link=$('examOfficialLink');
   if(a.officialUrl){link.href=a.officialUrl;link.style.display='inline-flex'}
   else{link.style.display='none'}
 
   detail.classList.add('open');
   detail.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+const ELIGIBILITY_CODES=['UPSC','SSC-CGL','IBPS-PO','SBI-PO'];
+
+function checkEligibility(){
+  const age=Number($('eligAge').value);
+  const category=$('eligCategory').value;
+  const qual=$('eligQual').value;
+  const results=$('eligResults');
+  if(!results) return;
+  if(!age||age<15||age>70){alert('Enter a valid age.');return}
+
+  const qualMeets=qual==='final'||qual==='graduate'||qual==='postgrad';
+
+  const rows=ELIGIBILITY_CODES.map(code=>{
+    const a=APPLICATIONS.find(x=>x.code===code);
+    const e=a.eligibility;
+    const maxAge=e.maxAgeByCategory[category];
+    const ageUncertain=typeof maxAge!=='number';
+    let verdict,cls;
+    if(!qualMeets){
+      verdict='Not yet — needs at least final-year graduation';cls='closed';
+    }else if(age<e.minAge){
+      verdict='Not yet — below minimum age ('+e.minAge+')';cls='closed';
+    }else if(ageUncertain){
+      verdict='Possibly — exact age ceiling for '+category+' unclear, check notification';cls='expected';
+    }else if(age<=maxAge){
+      verdict='Likely eligible';cls='open';
+    }else{
+      verdict='Likely not eligible — above age limit ('+maxAge+' for '+category+')';cls='closed';
+    }
+    return {a,verdict,cls};
+  });
+
+  results.innerHTML=
+    '<p class="fill-intro">Checked against the 4 exams we’ve researched eligibility rules for so far — more are coming. This is a soft match, not a verdict: always confirm the exact clause in the official notification before paying the application fee.</p>'+
+    rows.map(r=>
+      '<div class="elig-row">'+
+        '<div class="elig-exam">'+r.a.name+'</div>'+
+        '<span class="status-pill '+r.cls+'">'+r.verdict+'</span>'+
+        '<button class="btn btn-outline btn-sm" onclick="showExamDetail(\''+r.a.code+'\')">View checklist →</button>'+
+      '</div>'
+    ).join('');
+  results.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function initCatTabs(){

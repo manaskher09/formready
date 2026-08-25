@@ -98,6 +98,22 @@ p{margin:0}
 .stat b{display:block;font-size:26px;color:var(--ink)}
 .stat span{font-size:13px;color:var(--muted)}
 
+.hero-preview{margin-top:44px;display:flex;justify-content:center}
+.preview-frame{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);max-width:480px;width:100%;overflow:hidden;text-align:left}
+.preview-chrome{display:flex;gap:6px;padding:12px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.preview-chrome span{width:9px;height:9px;border-radius:50%;display:inline-block}
+.preview-chrome span:nth-child(1){background:#ef4444}
+.preview-chrome span:nth-child(2){background:#f59e0b}
+.preview-chrome span:nth-child(3){background:#22c55e}
+.preview-body{padding:22px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}
+.preview-file{display:flex;align-items:center;gap:12px}
+.preview-file-icon{width:40px;height:40px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--muted);flex:none}
+.preview-file b{display:block;font-size:13.5px}
+.preview-file span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.preview-arrow{color:var(--muted);font-size:20px;flex:none}
+.preview-result{display:flex;flex-direction:column;gap:4px}
+.preview-note{font-size:11px;color:var(--muted)}
+
 /* ---------- section shell ---------- */
 .section{padding:56px 0}
 .section-head{text-align:center;max-width:640px;margin:0 auto 34px}
@@ -163,6 +179,18 @@ p{margin:0}
 .dropzone strong{display:block;font-size:16px;margin:8px 0 4px}
 .dropzone .small{font-size:12px;color:var(--muted);margin-top:8px}
 
+/* ---------- eligibility checker ---------- */
+.elig-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px;margin-bottom:26px;box-shadow:var(--shadow-sm)}
+.elig-head{margin-bottom:18px}
+.elig-head h2{font-size:22px;margin:8px 0 6px}
+.elig-head p{color:var(--muted);font-size:14px}
+.elig-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:10px}
+.elig-form .row{margin:0;flex-direction:column;align-items:stretch;gap:6px}
+.elig-form label{font-size:12px;font-weight:700;color:var(--muted)}
+.elig-hint{font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:16px}
+.elig-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface-2);border-radius:12px;padding:14px 16px;margin-bottom:10px;flex-wrap:wrap}
+.elig-exam{font-weight:700;font-size:14px;flex:1;min-width:140px}
+
 /* ---------- applications page ---------- */
 .trust-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;font-size:13px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:10px 16px;margin-bottom:18px}
 .trust-bar b{color:var(--ink)}
@@ -185,6 +213,7 @@ p{margin:0}
 .exam-card .exam-badge.cat-defence{background:linear-gradient(135deg,#64748b,#334155)}
 .exam-card .exam-badge.cat-state{background:linear-gradient(135deg,#eab308,#a16207)}
 .exam-card .exam-badge.cat-teaching{background:linear-gradient(135deg,#db2777,#9d174d)}
+.exam-card .exam-badge.cat-highered{background:linear-gradient(135deg,#06b6d4,#0e7490)}
 .exam-card h3{font-size:15.5px;margin-bottom:4px}
 .exam-card .cat{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:10px}
 .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px}
@@ -205,6 +234,16 @@ p{margin:0}
 .spec b{display:block;font-size:13px;margin-bottom:4px}
 .spec span{font-size:12.5px;color:var(--muted);line-height:1.5}
 .notice-box{background:color-mix(in srgb,var(--accent) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);color:var(--accent-dark);font-size:13px;padding:12px 14px;border-radius:10px;line-height:1.6}
+.detail-tabs{display:flex;gap:8px;margin:18px 0 4px}
+.fill-intro{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:14px;padding:10px 12px;background:var(--surface-2);border-radius:10px}
+.fill-guide{display:none;margin:4px 0 18px}
+.fill-row{background:var(--surface-2);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.fill-field{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--brand-dark);margin-bottom:6px}
+:root[data-theme="dark"] .fill-field{color:var(--brand-light)}
+.fill-body{font-size:13px;line-height:1.7;color:var(--ink)}
+.fill-body b{font-weight:700;color:var(--muted);font-size:12px}
+.fill-note{color:var(--muted);font-size:12.5px;margin-top:2px}
+.fill-note.warn{color:var(--accent-dark);font-weight:600}
 
 /* ---------- benefits ---------- */
 .benefit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
@@ -217,7 +256,9 @@ p{margin:0}
 .about-hero{text-align:center;max-width:680px;margin:0 auto}
 .value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
 .value-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px}
-.value-card h3{font-size:16px;margin-bottom:8px}
+.value-card h3{font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.value-card h3 .icon{flex:none;color:var(--brand-dark)}
+:root[data-theme="dark"] .value-card h3 .icon{color:var(--brand-light)}
 .value-card p{color:var(--muted);font-size:14px;line-height:1.6}
 .roadmap{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .roadmap li{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px}
@@ -241,7 +282,7 @@ p{margin:0}
 .close{border:0;background:var(--surface-2);width:32px;height:32px;border-radius:9px;font-size:18px;cursor:pointer;color:var(--muted)}
 .modal-sub{color:var(--muted);font-size:13.5px;margin-bottom:18px}
 .row{display:flex;gap:10px;align-items:center;margin-top:12px}
-.row input[type=number],.row input[type=file]{flex:1;padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.row input[type=number],.row input[type=file],.row select{flex:1;padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
 .result{margin-top:18px;padding:16px;background:var(--surface-2);border-radius:12px;display:none}
 .previewImg{max-width:140px;max-height:120px;display:block;margin:0 auto 12px;border-radius:8px;box-shadow:var(--shadow-sm)}
 

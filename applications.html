@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Applications — FormReady</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FormReady">
+<meta property="og:title" content="Find Your Exam — FormReady">
+<meta property="og:description" content="The exact photo, signature and document checklist for your exam — compiled from official notifications, with a fill-in guide for the form itself.">
+<meta property="og:image" content="og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Find Your Exam — FormReady">
+<meta name="twitter:description" content="The exact photo, signature and document checklist for your exam — compiled from official notifications, with a fill-in guide for the form itself.">
+<meta name="twitter:image" content="og-image.png">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,12 +23,13 @@
     <a href="index.html" class="brand"><span class="brand-mark">FR</span>FormReady</a>
     <nav class="main-nav" id="mainNav">
       <a href="index.html">Home</a>
-      <a href="tools.html">Tools</a>
       <a href="applications.html" aria-current="page">Applications</a>
+      <a href="tools.html">Tools</a>
       <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
     </nav>
     <div class="header-actions">
-      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode"></button>
       <a href="tools.html" class="btn btn-primary btn-sm">Open Tools</a>
       <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
     </div>
@@ -28,13 +39,47 @@
 <main>
   <section class="hero wrap" style="padding:44px 0 20px">
     <div class="hero-inner">
-      <span class="eyebrow">🎓 Application Mode</span>
+      <span class="eyebrow"><svg class="icon" viewBox="0 0 24 24" width="14" height="14"><path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M6 10.5V16c0 1.5 2.5 3 6 3s6-1.5 6-3v-5.5"/><path d="M22 8v6"/></svg> Application Mode</span>
       <h1 style="font-size:38px">Find your <span class="grad">exam or application</span></h1>
       <p class="lead">Search or filter by category, then open an exam to see its document checklist.</p>
     </div>
   </section>
 
   <section class="section wrap" style="padding-top:0">
+    <div class="elig-card">
+      <div class="elig-head">
+        <span class="tag">New</span>
+        <h2>Not sure what you're eligible for?</h2>
+        <p>Enter your details and we'll check them against the exams we've researched eligibility rules for so far.</p>
+      </div>
+      <div class="elig-form">
+        <div class="row"><label>Age</label><input id="eligAge" type="number" min="15" max="70" placeholder="e.g. 24"></div>
+        <div class="row"><label>Category</label>
+          <select id="eligCategory">
+            <option value="General">General</option>
+            <option value="EWS">EWS</option>
+            <option value="OBC">OBC (Non-Creamy Layer)</option>
+            <option value="SC">SC</option>
+            <option value="ST">ST</option>
+            <option value="PwBD">PwBD</option>
+          </select>
+        </div>
+        <div class="row"><label>Highest Qualification</label>
+          <select id="eligQual">
+            <option value="below">Below graduation</option>
+            <option value="final">Final year of graduation</option>
+            <option value="graduate">Graduate (degree completed)</option>
+            <option value="postgrad">Post-graduate</option>
+          </select>
+        </div>
+        <div class="row"><label>Year of graduation (if applicable)</label><input id="eligYear" type="number" min="1980" max="2035" placeholder="e.g. 2026"></div>
+        <div class="row"><label>Years of work experience</label><input id="eligExp" type="number" min="0" max="45" placeholder="0 if none"></div>
+      </div>
+      <p class="elig-hint">Graduation year and experience aren't used by any of the 4 exams checked below yet — none of them require a specific passing year or prior work experience — but we're capturing them for exams we add later that do.</p>
+      <button class="btn btn-primary" onclick="checkEligibility()">Check My Eligibility</button>
+      <div id="eligResults"></div>
+    </div>
+
     <div class="trust-bar" id="trustBar"></div>
 
     <div class="filter-bar">
@@ -47,6 +92,7 @@
         <button class="tool-tab" data-cat="Defence">Defence</button>
         <button class="tool-tab" data-cat="State PSC">State PSC</button>
         <button class="tool-tab" data-cat="Teaching">Teaching</button>
+        <button class="tool-tab" data-cat="Higher Education">Higher Education</button>
       </div>
     </div>
     <div class="trend-row">
@@ -66,7 +112,12 @@
         <button class="close" onclick="document.getElementById('examDetail').classList.remove('open')">×</button>
       </div>
       <div class="notice-box" id="examNotice"></div>
+      <div class="detail-tabs" id="detailTabs" style="display:none">
+        <button class="tool-tab active">Document Specs</button>
+        <button class="tool-tab">Fill Guide</button>
+      </div>
       <div class="spec-grid" id="examSpecs"></div>
+      <div class="fill-guide" id="examFillGuide"></div>
       <div class="hero-cta" style="justify-content:flex-start">
         <a href="tools.html" class="btn btn-primary btn-sm">Resize a Photo</a>
         <a href="tools.html" class="btn btn-outline btn-sm">Resize a Signature</a>
@@ -80,7 +131,7 @@
   <div class="wrap footer-inner">
     <div class="footer-brand">FormReady</div>
     <nav class="footer-links">
-      <a href="index.html">Home</a><a href="tools.html">Tools</a><a href="applications.html">Applications</a><a href="about.html">About</a>
+      <a href="index.html">Home</a><a href="applications.html">Applications</a><a href="tools.html">Tools</a><a href="about.html">About</a><a href="contact.html">Contact</a>
     </nav>
     <p class="disclaimer">FormReady is an independent tool and is not affiliated with UPSC, SSC, IBPS, Railway, BPSC or any government body. Requirement details shown here are compiled from official notifications where available (each exam shows its own "verified" date and source link) — always confirm against the current official notification before submitting.</p>
   </div>

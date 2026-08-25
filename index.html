@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FormReady — Resize, Compress & Convert Documents for Applications</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FormReady">
+<meta property="og:title" content="FormReady — Make Your Documents Application-Ready">
+<meta property="og:description" content="Resize, compress and convert your photo, signature and PDF files to the exact size an application form demands — 100% in your browser, nothing uploaded to a server.">
+<meta property="og:image" content="og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FormReady — Make Your Documents Application-Ready">
+<meta name="twitter:description" content="Resize, compress and convert your photo, signature and PDF files to the exact size an application form demands — 100% in your browser, nothing uploaded to a server.">
+<meta name="twitter:image" content="og-image.png">
+<!-- TODO once deployed to a real domain: some crawlers (esp. Facebook/WhatsApp) require absolute URLs for og:image and og:url to resolve reliably — swap "og-image.png" for "https://yourdomain.com/og-image.png" and add og:url once you have one. -->
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,12 +24,13 @@
     <a href="index.html" class="brand"><span class="brand-mark">FR</span>FormReady</a>
     <nav class="main-nav" id="mainNav">
       <a href="index.html" aria-current="page">Home</a>
-      <a href="tools.html">Tools</a>
       <a href="applications.html">Applications</a>
+      <a href="tools.html">Tools</a>
       <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
     </nav>
     <div class="header-actions">
-      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode"></button>
       <a href="tools.html" class="btn btn-primary btn-sm">Open Tools</a>
       <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
     </div>
@@ -28,7 +40,7 @@
 <main>
   <section class="hero wrap">
     <div class="hero-inner">
-      <span class="eyebrow">🇮🇳 Built for Indian exam & job applications</span>
+      <span class="eyebrow"><svg class="icon" viewBox="0 0 24 24" width="14" height="14"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg> Zero uploads. Exact size. Every time.</span>
       <h1>Make Your Documents<br><span class="grad">Application-Ready</span></h1>
       <p class="lead">Resize, compress and convert your photo, signature and PDF files to the exact size an application form demands — right in your browser, nothing uploaded to a server.</p>
       <div class="hero-cta">
@@ -37,9 +49,25 @@
         <a href="applications.html" class="btn btn-ghost">Find My Exam →</a>
       </div>
       <div class="stat-row">
-        <div class="stat"><b>15+</b><span>Exams & applications covered</span></div>
+        <div class="stat"><b>19+</b><span>Exams & applications covered</span></div>
         <div class="stat"><b>100%</b><span>Runs in your browser</span></div>
         <div class="stat"><b>0</b><span>Files ever leave your device</span></div>
+      </div>
+      <div class="hero-preview">
+        <div class="preview-frame">
+          <div class="preview-chrome"><span></span><span></span><span></span></div>
+          <div class="preview-body">
+            <div class="preview-file">
+              <div class="preview-file-icon"><svg class="icon" viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="9" r="1.6"/><path d="M21 15l-5-5-4 4-3-3-6 6"/></svg></div>
+              <div><b>passport_photo.jpg</b><span>Target: 50 KB · 200×230 px</span></div>
+            </div>
+            <div class="preview-arrow">→</div>
+            <div class="preview-result">
+              <span class="status-pill open">✓ 49.6 KB</span>
+              <span class="preview-note">Exact match · JPG</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -75,7 +103,7 @@
   <section class="section wrap">
     <div class="appmode-banner">
       <div>
-        <span class="eyebrow" style="background:rgba(255,255,255,.12);color:#fff">🎓 Application Mode</span>
+        <span class="eyebrow" style="background:rgba(255,255,255,.12);color:#fff"><svg class="icon" viewBox="0 0 24 24" width="14" height="14"><path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M6 10.5V16c0 1.5 2.5 3 6 3s6-1.5 6-3v-5.5"/><path d="M22 8v6"/></svg> Application Mode</span>
         <h2>Applying for UPSC, SSC, IBPS, Railway or a state PSC exam?</h2>
         <p>Pick your exam and get the photo, signature and document checklist for that specific application — then jump straight into the matching resize tool.</p>
         <div class="hero-cta" style="justify-content:flex-start">
@@ -126,7 +154,7 @@
   <div class="wrap footer-inner">
     <div class="footer-brand">FormReady</div>
     <nav class="footer-links">
-      <a href="index.html">Home</a><a href="tools.html">Tools</a><a href="applications.html">Applications</a><a href="about.html">About</a>
+      <a href="index.html">Home</a><a href="applications.html">Applications</a><a href="tools.html">Tools</a><a href="about.html">About</a><a href="contact.html">Contact</a>
     </nav>
     <p class="disclaimer">FormReady is an independent tool and is not affiliated with UPSC, SSC, IBPS, Railway, BPSC or any government body. Requirement details on the Applications page are compiled from official notifications where available (dated per exam) — always confirm exact specifications against the current official notification before submitting.</p>
   </div>
